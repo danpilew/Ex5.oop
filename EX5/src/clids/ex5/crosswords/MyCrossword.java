@@ -7,15 +7,16 @@ package clids.ex5.crosswords;
 import clids.ex5.search.SearchBoard;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 /**
  *
  * @author t7639496
  */
 public class MyCrossword implements Crossword{
-    
+private TreeSet<String> unusedWords;
     public MyCrossword(){
-        
+        unusedWords = new TreeSet<String>(new wordsComperator());
     }
 
     @Override
