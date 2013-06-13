@@ -7,9 +7,30 @@ package clids.ex5.crosswords;
  *
  * @author Administrator
  */
-public class StartPosition {
+public class StartPosition implements CrosswordPosition{
+    
     private int length;
-    private CrosswordPosition pos;
+    private boolean isVertical;
+    int X;
+    int Y;
+      
+    public StartPosition(int length, boolean isVertical, int X, int Y){
+        this.X = X;
+        this.Y = Y;
+        this.isVertical = isVertical;
+        this.length = length;
+    }
+    
+    public StartPosition getNext(){
+        int newLength = length - 1;
+        int newX = X;
+        int newY = Y;
+        if (isVertical)
+            newY++;
+        else
+            newX++;
+        return new StartPosition(newLength, isVertical, newX, newY);
+    }
 
     /**
      * @return the length
@@ -25,17 +46,20 @@ public class StartPosition {
         this.length = length;
     }
 
-    /**
-     * @return the pos
-     */
-    public CrosswordPosition getPos() {
-        return pos;
+    @Override
+    public int getX() {
+        return X;
     }
 
-    /**
-     * @param pos the pos to set
-     */
-    public void setPos(CrosswordPosition pos) {
-        this.pos = pos;
+    @Override
+    public int getY() {
+        return Y;
+    }
+
+    @Override
+    public boolean isVertical() {
+        return isVertical;
     }
 }
+
+   
