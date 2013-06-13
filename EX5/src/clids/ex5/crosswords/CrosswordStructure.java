@@ -31,6 +31,13 @@ public interface CrosswordStructure {
 	 * @return The cell type; FRAME_SLOT returned for any slot outside the bounds.
 	 */
 	SlotType getSlotType(CrosswordPosition pos);
+        
+        /**
+	 * Retrieves the slot type of a specific entry.
+	 * @param pos the position for the entry
+	 * @return The cell type; FRAME_SLOT returned for any slot outside the bounds.
+	 */
+	SlotType getSlotType(int x, int y);
 
 	/**
 	 * Possible slot types.

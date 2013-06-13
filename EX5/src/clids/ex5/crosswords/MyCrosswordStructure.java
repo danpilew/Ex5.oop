@@ -38,12 +38,12 @@ public class MyCrosswordStructure implements CrosswordStructure {
 	 * 
 	 * @see CrosswordShape#getSlotType(CrosswordPosition)
 	 */
-	public SlotType getSlotType(CrosswordPosition pos) {
-		if (pos.getX() >= getWidth() || pos.getX() < 0 || 
-				pos.getY() >= getHeight() || pos.getY() < 0)
+	public SlotType getSlotType(int x, int y) {
+		if (x >= getWidth() || x < 0 || 
+				y >= getHeight() || y < 0)
 			return SlotType.FRAME_SLOT;
 		
-		switch (this.data.get(pos.getY()).charAt(pos.getX())) {
+		switch (this.data.get(y).charAt(x)) {
 		case '_':
 			return SlotType.UNUSED_SLOT;
 		default:
@@ -51,6 +51,11 @@ public class MyCrosswordStructure implements CrosswordStructure {
 		}
 	}
 
+        @Override
+        public SlotType getSlotType(CrosswordPosition pos) {
+            return getSlotType(pos.getX(), pos.getY());
+        }
+        
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -68,5 +73,7 @@ public class MyCrosswordStructure implements CrosswordStructure {
 			if (sc!=null) sc.close();
 		}
 	}
+
+    
 
 }

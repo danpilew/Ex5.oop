@@ -14,8 +14,16 @@ public class Square {
     private boolean startOfHorizontal;
     private char letter;
     
-    public Square(){
-          this(0,'@',false,false);
+    public Square(CrosswordStructure.SlotType type){
+        this(0,'@',false,false);
+        switch(type){
+            case FRAME_SLOT:
+                setOverRides(-1);
+                break;
+            case UNUSED_SLOT:
+                setOverRides(0);
+                break;
+        }
     }
     
     public Square(int overRides, char letter, boolean startOfHorizontal, boolean startOfVertical){
