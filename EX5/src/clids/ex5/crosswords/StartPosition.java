@@ -23,13 +23,16 @@ public class StartPosition implements CrosswordPosition{
     
     public StartPosition getNext(){
         int newLength = length - 1;
+        if(newLength > 0){
         int newX = X;
-        int newY = Y;
-        if (isVertical)
-            newY++;
-        else
-            newX++;
-        return new StartPosition(newLength, isVertical, newX, newY);
+            int newY = Y;
+            if (isVertical)
+                newY++;
+            else
+                newX++;
+            return new StartPosition(newLength, isVertical, newX, newY);
+        }
+        return null;
     }
 
     /**

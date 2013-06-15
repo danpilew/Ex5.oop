@@ -13,29 +13,24 @@ import java.util.TreeSet;
  */
 public class initializeStartPos {
 
-    private final boolean VERTICAL = true;
-    private final boolean HORIZONTAL = false;
-    private Square[][] board;
+    private static final boolean VERTICAL = true;
+    private static final boolean HORIZONTAL = false;
 
-    public TreeSet<StartPosition> initialStartPos() {
+    public static TreeSet<StartPosition> initialStartPos(Square[][] board) {
         TreeSet<StartPosition> tree = new TreeSet<>(new StartPositionComparator());
 
         for (int i = 0; i < board.length; i++) {
-            LinkedList<StartPosition> arrStPoInLine = startPointsOfLineOrCol(i, HORIZONTAL);
-            for (StartPosition stpo : arrStPoInLine) {
-                tree.add(stpo);
-            }
+            LinkedList<StartPosition> arrStPoInLine = startPointsOfLineOrCol(i, HORIZONTAL, board);            
+            tree.addAll(arrStPoInLine);
         }
         for (int j = 0; j < board[0].length; j++) {
-            LinkedList<StartPosition> arrStPoInCol = startPointsOfLineOrCol(j, VERTICAL);
-            for (StartPosition stpo : arrStPoInCol) {
-                tree.add(stpo);
-            }
+            LinkedList<StartPosition> arrStPoInCol = startPointsOfLineOrCol(j, VERTICAL,board);
+            tree.addAll(arrStPoInCol);
         }
         return tree;
     }
 
-    private LinkedList<StartPosition> startPointsOfLineOrCol(int lineOrCol, boolean isVertical) {
+    private static LinkedList<StartPosition> startPointsOfLineOrCol(int lineOrCol, boolean isVertical, Square[][] board) {
         LinkedList<StartPosition> stPoList = new LinkedList<>();
         int firstInd = 0;
         int secInd;
@@ -52,8 +47,8 @@ public class initializeStartPos {
                     while (board[secInd][lineOrCol].getOverRides() != -1) {
                         secInd++;
                     }
-                    firstInd = secInd;
                     stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, firstInd, lineOrCol));
+                    firstInd = secInd;
                 } else {
                     while (board[lineOrCol][firstInd].getOverRides() == -1) {
                         firstInd++;
@@ -62,8 +57,8 @@ public class initializeStartPos {
                     while (board[lineOrCol][secInd].getOverRides() != -1) {
                         secInd++;
                     }
-                    firstInd = secInd;
                     stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, lineOrCol, firstInd));
+                    firstInd = secInd;
                 }
             }
         } finally {

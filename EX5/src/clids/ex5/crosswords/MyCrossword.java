@@ -12,12 +12,13 @@ import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.Position;
 
 /**
  *
  * @author t7639496
  */
-public class MyCrossword implements Crossword {
+public class MyCrossword implements Crossword, Cloneable{
 
     private TreeSet<String> unusedWords;
     private Square[][] board;
@@ -28,6 +29,7 @@ public class MyCrossword implements Crossword {
         quality = 0;
         usedWords = new HashMap<String,CrosswordEntry>();
     }
+    
 
     @Override
     public void attachDictionary(CrosswordDictionary dictionary) {
@@ -52,13 +54,13 @@ public class MyCrossword implements Crossword {
     
     @Override
     public boolean isBestSolution() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return unusedWords.isEmpty();
     }
 
     @Override
     public Iterator<CrosswordEntry> getMovesIterator() {
-     //   return new MovesIterator<CrosswordEntry>(unused,reshef);
-        return null;
+        TreeSet<StartPosition> position = initializeStartPos.initialStartPos(board);
+        return new MovesIterator(unusedWords, position);
     }
 
     @Override
@@ -68,7 +70,8 @@ public class MyCrossword implements Crossword {
 
     @Override
     public int getQualityBound() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        return 100;
     }
 
     @Override
@@ -112,7 +115,7 @@ public class MyCrossword implements Crossword {
     @Override
     public SearchBoard<CrosswordEntry> getCopy() {
         try {
-            return (SearchBoard) this.clone();
+            return (SearchBoard<CrosswordEntry>) this.clone();
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(MyCrossword.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,26 +126,32 @@ public class MyCrossword implements Crossword {
 
         private TreeSet<String> unused;
         private TreeSet<StartPosition> startPoints;
-        private int i, j;
+        String currentWord;
+        StartPosition currentPos;
+        CrosswordEntryMove currentMove;
 
         public MovesIterator(TreeSet<String> unused, TreeSet<StartPosition> startPoints) {
-            this.startPoints = startPoints;
             this.unused = unused;
-            i = 0;
-            j = -1;
+            this.startPoints = startPoints;
+            currentWord = null;
+            currentPos = null;
+            currentMove = null;
         }
 
         @Override
         public boolean hasNext() {
-            return (i == startPoints.size());
+             while(!isWordFit(currentWord,currentPos) || currentPos == null){
+                  updateWordsPos();
+            }
+            if(currentPos == null)
+                return false;
+            currentMove = new CrosswordEntryMove(currentWord, "Shalala", currentPos);
+            return true;
         }
 
         @Override
         public M next() {
-            updateIJ();
-            //while()
-
-            return null;
+           return (M) currentMove;
         }
 
         private boolean isWordFit(String word, StartPosition position) {
@@ -166,7 +175,7 @@ public class MyCrossword implements Crossword {
                 }
                 //whather the box is Frame_Slot or the letters don't fit, return false.
                 if (currentPosition.getOverRides() == -1
-                        || (word.charAt(i) != currentPosition.getLetter() && (word.charAt(i) != '@'))) {
+                        || (word.charAt(n) != currentPosition.getLetter() && (word.charAt(n) != '@'))) {
                     return false;
                 }
             }
@@ -175,12 +184,18 @@ public class MyCrossword implements Crossword {
             return true;
         }
 
-        private void updateIJ() {
-            j++;
-            if (j == unused.size()) {
-                j = 0;
-                i++;
-            }
+        private void updateWordsPos() {
+           currentWord = unused.higher(currentWord);
+           if(currentWord == null){
+               currentWord = unused.first();
+               startPoints.remove(currentPos);
+               if(currentPos.getNext() != null){
+                     startPoints.add(currentPos.getNext());
+               }
+               currentPos = startPoints.higher(currentPos);
+               
+           }
+           
         }
 
         @Override
