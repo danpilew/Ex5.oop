@@ -25,11 +25,11 @@ public class StartPositionComparator implements Comparator <StartPosition>{
       //by X
        int compareXResult = Integer.compare(o1.getX(), o2.getX());
       if(compareXResult != 0)
-           return -(compareXResult);
+           return (compareXResult);
       //by Y
       int compareYResult = Integer.compare(o1.getY(), o2.getY());
       if(compareYResult != 0)
-           return -(compareYResult);
+           return (compareYResult);
       // by vertical
       if (o1.isVertical())
           return -1;
