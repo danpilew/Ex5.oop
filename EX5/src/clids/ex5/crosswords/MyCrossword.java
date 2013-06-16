@@ -34,6 +34,8 @@ public class MyCrossword implements Crossword, Cloneable{
     @Override
     public void attachDictionary(CrosswordDictionary dictionary) {
         unusedWords = new TreeSet<String>(new wordsComperator());
+        unusedWords.addAll(dictionary.getTerms());
+        System.out.println("Dict: " + dictionary.getTerms().toString());
     }
 
     @Override
@@ -44,6 +46,7 @@ public class MyCrossword implements Crossword, Cloneable{
                 board[i][j] = new Square(structure.getSlotType(i, j));
             }
         }
+        toStringg();
     }
 
     @Override
@@ -76,13 +79,16 @@ public class MyCrossword implements Crossword, Cloneable{
 
     @Override
     public void doMove(CrosswordEntry move) {
+        System.out.println("Doing move");
+        toStringg();
+        System.out.println("move is: " +  move.getTerm() + move.getPosition().getX() + " " + move.getPosition().getY());
          for (int n = 0; n < move.getTerm().length(); n++) {
              int x  = move.getPosition().getX();
              int y = move.getPosition().getY();
                 if (move.getPosition().isVertical()) {
-                    x++;
+                    x = x+n;
                 } else {
-                    y++;
+                    y= y+n;
                 }
                board[y][x].setLetter(move.getTerm().charAt(n));
                board[y][x].setOverRides( board[y][x].getOverRides() + 1);
@@ -90,10 +96,14 @@ public class MyCrossword implements Crossword, Cloneable{
                unusedWords.remove(move.getTerm());
                usedWords.put(move.getTerm(), move);
             }
+         System.out.println("Finished");
+        toStringg();
     }
 
     @Override
     public void undoMove(CrosswordEntry move) {
+        System.out.println("Doing move");
+        toStringg();
         for (int n = 0; n < move.getTerm().length(); n++) {
              int x  = move.getPosition().getX();
              int y = move.getPosition().getY();
@@ -110,6 +120,8 @@ public class MyCrossword implements Crossword, Cloneable{
                unusedWords.add(move.getTerm());
                usedWords.remove(move.getTerm());
             }
+        System.out.println("Finished");
+        toStringg();
     }
 
     @Override
@@ -121,7 +133,16 @@ public class MyCrossword implements Crossword, Cloneable{
         }
         return null;
     }
-
+    
+    
+    public void toStringg(){
+        for(int i = 0; i < board.length ; i++){
+            for(int j = 0 ; j < board[0].length ; j++){
+                System.out.print(board[i][j].getLetter());
+            }
+            System.out.println("");
+        }
+    }
     private class MovesIterator<M extends BoardMove> implements Iterator<M> {
 
         private TreeSet<String> unused;
@@ -140,7 +161,17 @@ public class MyCrossword implements Crossword, Cloneable{
 
         @Override
         public boolean hasNext() {
-             while(!isWordFit(currentWord,currentPos) || currentPos == null){
+            if(currentPos == null){
+                if(currentWord == null){
+                    System.out.println(startPoints.size()); 
+                    currentPos = startPoints.first();
+                    currentWord = unused.first();
+                }else
+                return false;
+            }else{
+                updateWordsPos();
+            }
+             while( currentPos != null && !isWordFit(currentWord,currentPos)){
                   updateWordsPos();
             }
             if(currentPos == null)
@@ -175,7 +206,7 @@ public class MyCrossword implements Crossword, Cloneable{
                 }
                 //whather the box is Frame_Slot or the letters don't fit, return false.
                 if (currentPosition.getOverRides() == -1
-                        || (word.charAt(n) != currentPosition.getLetter() && (word.charAt(n) != '@'))) {
+                        || (word.charAt(n) != currentPosition.getLetter() && (currentPosition.getLetter() != '@'))) {
                     return false;
                 }
             }
