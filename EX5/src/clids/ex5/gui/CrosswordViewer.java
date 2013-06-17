@@ -88,7 +88,7 @@ public class CrosswordViewer extends JFrame implements ActionListener,
 			return;
 		} catch (Exception e) {
 			System.err.println("Exception during crossword creation!" + e);
-			e.printStackTrace();
+			//e.printStackTrace();
 			return;
 		}
 		if (args.length !=4) { 
@@ -117,8 +117,8 @@ public class CrosswordViewer extends JFrame implements ActionListener,
 		emptyBoard.attachStructure(this.structure);
 		
 		//Create and run the search
-		DepthFirstSearch<Crossword, CrosswordEntry> search = 
-			new MyDepthFirstSearch<Crossword, CrosswordEntry>();
+		DepthFirstSearch<Crossword, CrosswordEntry> search;
+            search = new MyDepthFirstSearch<>();
 		long time = new Date().getTime();
 		this.board = search.performSearch(emptyBoard, dictionary.getTerms().size() * 2, timeout);
 		// search.searchTree(emptyBoard, dictionary.getTerms().size(), timeout);
@@ -150,9 +150,11 @@ public class CrosswordViewer extends JFrame implements ActionListener,
 		HashedPosition(CrosswordPosition p) {
 			_p=p;
 		}
+                @Override
 		public int hashCode() {
 			return _p.getX()*11+_p.getY()*13+25*(_p.isVertical()?1:0);			
 		}
+                @Override
 		public boolean equals(Object o) {
 			if (!(o instanceof HashedPosition)) return false;
 			HashedPosition p1=(HashedPosition)o;			
@@ -161,13 +163,14 @@ public class CrosswordViewer extends JFrame implements ActionListener,
 		public boolean isInside() {
 			return _p.getX()>=0 && _p.getX()<structure.getWidth() && _p.getY()>=0 && _p.getY()<structure.getHeight();
 		}
+                @Override
 		public String toString() {
 			return "X:"+_p.getX()+",Y:"+_p.getY()+" IsVertical:"+_p.isVertical();
 		}
 	}
 	private boolean verifyEntries() {
-		Set<HashedPosition> positions=new HashSet<HashedPosition>();
-		Set<String> words=new HashSet<String>();
+		Set<HashedPosition> positions=new HashSet<>();
+		Set<String> words=new HashSet<>();
 		for (CrosswordEntry entry:this.entries) {
 			HashedPosition p=new HashedPosition(entry.getPosition());
 			String w= entry.getTerm();
@@ -454,6 +457,7 @@ public class CrosswordViewer extends JFrame implements ActionListener,
 	/**
 	 * Redraw function
 	 */
+        @Override
 	public void paint(Graphics g) {
 		paintComponents(g);
 		paintWord(g, null);
