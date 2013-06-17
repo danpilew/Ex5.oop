@@ -16,7 +16,7 @@ public class initializeStartPos {
     private static final boolean VERTICAL = true;
     private static final boolean HORIZONTAL = false;
     private static final boolean FIRSTINDEX = true;
-    private static final boolean SECONDINDEX = true;
+    private static final boolean SECONDINDEX = false;
 
     public static TreeSet<StartPosition> initialStartPos(Square[][] board) {
         TreeSet<StartPosition> tree = new TreeSet<>(new StartPositionComparator());
@@ -51,7 +51,7 @@ public class initializeStartPos {
                     while (board[secInd][lineOrCol].getOverRides() != -1) {
                         secInd++;
                     }
-                    stPoList.add(new StartPosition(secInd - firstInd, VERTICAL, firstInd, lineOrCol)); // CHECK +1
+                    stPoList.add(new StartPosition(secInd - firstInd, VERTICAL, lineOrCol, firstInd)); // CHECK +1
                     firstInd = secInd;
                 } else {
                     outOFBoundInIndex = FIRSTINDEX;
@@ -63,16 +63,16 @@ public class initializeStartPos {
                     while (board[lineOrCol][secInd].getOverRides() != -1) {
                         secInd++;
                     }
-                    stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, lineOrCol, firstInd));// CHECK +1
+                    stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, firstInd, lineOrCol));// CHECK +1
                     firstInd = secInd;
                 }
             }
         } finally {
             if (outOFBoundInIndex == SECONDINDEX) {
                 if (isVertical) {
-                    stPoList.add(new StartPosition(secInd - firstInd, VERTICAL, firstInd, lineOrCol));
+                    stPoList.add(new StartPosition(secInd - firstInd, VERTICAL, lineOrCol, firstInd));
                 } else {
-                    stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, lineOrCol, firstInd));
+                    stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, firstInd, lineOrCol));
                 }
             }
                     return stPoList;

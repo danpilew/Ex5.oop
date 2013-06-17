@@ -37,7 +37,7 @@ private boolean reachedBestSolution;
     
     private void recSearch(B currentBoard , int depthToEnd){
                                                        //Conditions to stop search     
-        if(/*System.currentTimeMillis() >= endTime ||*/  //if time passed
+        if(System.currentTimeMillis() >= endTime ||  //if time passed
            depthToEnd == -1 ||                       //if depth passed
            currentBoard.getQualityBound() < bestQuality || // if bad branch.
            reachedBestSolution )                      //if another branch reached the best solution

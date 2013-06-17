@@ -1,0 +1,115 @@
+rreshe21
+dan09
+308200732
+205416191
+
+Full Name: Dan pilevski Ronen Reshef
+
+WE discussed about the exercise with: yoni horenstein.
+
+=========================================
+=  README for ex2: File processing tool =
+=========================================
+
+=======================
+=  File Description: =
+=======================
+
+ORDERS:
+Order.java - 
+	Abstract class.
+	The super class of all the orders.
+	implements the comparator interface.
+AbsOrder.java - 
+	order the files by their absolute path. 
+	it used as a default order, because two different files can't have the same absolute path (the computer don't allowing this).
+	if two files have same parameter that one of the other filters checked, the two files would be order by the AbsOrder.
+UnAbsuluteOrder.java -
+	Abstract class. 
+	The super class of all the orders except the AbsOrder. 
+	have method that compare two files by the AbsOrder.
+	we called this method if the files have same parameter that one of the filters checked.
+FileOrder.java - 
+	Sort files by file name (excluding directory), going from ‘a’ to ‘z’.
+ModOrder.java - 
+	Sort files by modification date, going from oldest to newest. check in resolution of hours.
+SizeOrder.java - 
+	Sort files by file size, going from smallest to largest.
+
+
+ACTIONS:
+Action.java - 
+	Abstract class.
+	The super class of all the actions.
+	have one method called act, and three constructor: default, get a string, get a line (necessary for the exceptions).
+SetPremissionAction.java - 
+	The super class of WriteAction and ExecAction.
+	have a constructor that get String input (should be:"Yes" or "No") and convert it to a boolean flag.
+WriteAction.java - 
+	Set file writing permissions.
+ExecAction.java - 
+	Set file executing permissions.
+Print_dataAction.java - 
+	Print file information.
+Print_nameAction.java - 
+	Print file name.
+CopyAction.java - 
+	Copy file to the given target directory.
+
+FILTERS:
+
+
+
+
+
+
+EXCEPTION:
+
+
+TOOLBOX:
+ToolBox.java - 
+	Contains some useful methods:
+		getBooleanFromParams - convert from String ("Yes" or "No") to boolean.
+		getDateFromParams - convert from String ("dd/mm/yyyy") to Date object.
+		getParamsFromString - convert from String to array of integers.
+
+
+
+PARSE:
+	
+
+
+README - this file 
+
+
+
+
+============
+=  Design: =
+============
+
+
+
+===========================
+=  Implementation Issues: =
+===========================
+1) - Abstract classes or as an interfaces - answer to question 3.
+	
+===========================
+=  Answers to Questions:  =
+===========================
+Questions:
+1) How did you implement your design? (Whether the one shown in class or your own design)
+2) How did you handle the different errors?
+3) Explain your choice between an abstract or interface classes for the filters, actions and orders.
+
+Answers:
+1) we the decided to chose the class solution.
+
+2)
+
+3) We decided to write them as abstract classes because:
+	 	we want that every class that represent a command could be only from one type (action, order or filter)
+		we don't need to combine them (because we decided write our code like we learn in the lecture 6,
+	 	so we connect between the three commands in the sections).
+
