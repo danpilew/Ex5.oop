@@ -3,113 +3,111 @@ dan09
 308200732
 205416191
 
-Full Name: Dan pilevski Ronen Reshef
+Full Names: Dan pilevski, Ronen Reshef
 
-WE discussed about the exercise with: yoni horenstein.
+WE discussed about the exercise with: Idan Berkovich.
 
 =========================================
-=  README for ex2: File processing tool =
+=  README for ex 5 – Crossword Creator =
 =========================================
 
 =======================
 =  File Description: =
 =======================
-
-ORDERS:
-Order.java - 
-	Abstract class.
-	The super class of all the orders.
-	implements the comparator interface.
-AbsOrder.java - 
-	order the files by their absolute path. 
-	it used as a default order, because two different files can't have the same absolute path (the computer don't allowing this).
-	if two files have same parameter that one of the other filters checked, the two files would be order by the AbsOrder.
-UnAbsuluteOrder.java -
-	Abstract class. 
-	The super class of all the orders except the AbsOrder. 
-	have method that compare two files by the AbsOrder.
-	we called this method if the files have same parameter that one of the filters checked.
-FileOrder.java - 
-	Sort files by file name (excluding directory), going from ‘a’ to ‘z’.
-ModOrder.java - 
-	Sort files by modification date, going from oldest to newest. check in resolution of hours.
-SizeOrder.java - 
-	Sort files by file size, going from smallest to largest.
-
-
-ACTIONS:
-Action.java - 
-	Abstract class.
-	The super class of all the actions.
-	have one method called act, and three constructor: default, get a string, get a line (necessary for the exceptions).
-SetPremissionAction.java - 
-	The super class of WriteAction and ExecAction.
-	have a constructor that get String input (should be:"Yes" or "No") and convert it to a boolean flag.
-WriteAction.java - 
-	Set file writing permissions.
-ExecAction.java - 
-	Set file executing permissions.
-Print_dataAction.java - 
-	Print file information.
-Print_nameAction.java - 
-	Print file name.
-CopyAction.java - 
-	Copy file to the given target directory.
-
-FILTERS:
-
-
-
-
-
-
-EXCEPTION:
-
-
-TOOLBOX:
-ToolBox.java - 
-	Contains some useful methods:
-		getBooleanFromParams - convert from String ("Yes" or "No") to boolean.
-		getDateFromParams - convert from String ("dd/mm/yyyy") to Date object.
-		getParamsFromString - convert from String to array of integers.
-
-
-
-PARSE:
+crosswords:
+    Crossword.java - had been given by you
+    CrosswordDictionary.java - had been given by you
+    CrosswordEntry.java - had been given by you
+    CrosswordEntryMove.java - ???
+    CrosswordPosition.java - had been given by you
+    CrosswordStructure.java - had been given by you, changed by us ???
+    MyCrossword.java - ???
+    MyCrosswordDictionary.java - had been given by you
+    MyCrosswordStructure.java - had been given by you, changed by us ???
+    Square.java - ???
+    StartPosition.java - describe a cell that word can start in it
+    StartPositionComparator.java - compare between two StartPositions by the 
+        criteria in the exercise descriptiona
+    initializeStartPos.java - create the best StartPositions of every line 
+        and every coloumn and add all of them to a tree set that sort them by
+        StartPositionComparator
+    wordsComperator.java - ???
 	
+gui:
+    had been given by you
 
+search:
+    BoardMove.java - had been given by you
+    DepthFirstSearch.java - had been given by you
+    MyDepthFirstSearch.java - ???
+    SearchBoard.java - had been given by you
+    
+Searchsamples:
+    had been given by you
 
 README - this file 
-
-
-
 
 ============
 =  Design: =
 ============
+The Entries Iterator - to improve Significantly our complexability, we wrote 
+it in the next way:
+we generate two tree sets, one words and one of StartPositions that implemet 
+CrosswordPosition and have the fields - [X, Y, IsVertical, length], by the 
+comperators:
+    for words - by the word length
+    for StartPositions - first by the maximal length aviable, then by x and y
+    coordinate and if it is vertical or horizontal - like it describe in the
+    exercise.
+the intersting addition we did, is the method 'getNext()' of StartPosition.
+if ve have for exampe a whole line of 'UNUSED_SLOT', we save only the first
+in the tree. the iterator, for any position, try to match it to the words in
+the tree (by order i described above) and create an Entry. if there are no 
+fitting words to the position, we use getNext() that gives us StartPoint, insert
+it to the tree, and delete the first Position. in this way, we also have a 
+better time complexity because we create only the entries we need, instead of 
+create all of the entries and then sort them, and also we have better memory
+place complexity.
 
 
-
-===========================
-=  Implementation Issues: =
-===========================
-1) - Abstract classes or as an interfaces - answer to question 3.
+    
 	
 ===========================
 =  Answers to Questions:  =
 ===========================
 Questions:
-1) How did you implement your design? (Whether the one shown in class or your own design)
-2) How did you handle the different errors?
-3) Explain your choice between an abstract or interface classes for the filters, actions and orders.
+
+1) How your framework supports the incorporation of additional optimization
+ methods and new ways for calculating UQ – it should be supported with a small
+ pseudo-code example. Specify which changes in 
+ which classes are required in order to do so. 
+
+2) In addition, in this exercise, the scoring method for calculating a quality 
+value for a crossword assumes each letter has the same weight. Other scoring 
+methods could assign a different weight for different words (in a Scrabble like
+fashion). Describe in the README how your framework supports incorporating 
+additional scoring methods. 
+
+3) Describe your decisions on utilized and data structures used in crossword 
+and search.
+
+4) Discuss the complexity of the DFS search, in terms of dictionary/structure
+size, and other relevant parameters. You should specify the complexity in 
+terms of O(variables) and explain its estimate, including your assumptions for
+arriving at this estimate.
 
 Answers:
-1) we the decided to chose the class solution.
+
+1) 
 
 2)
 
-3) We decided to write them as abstract classes because:
-	 	we want that every class that represent a command could be only from one type (action, order or filter)
-		we don't need to combine them (because we decided write our code like we learn in the lecture 6,
-	 	so we connect between the three commands in the sections).
+3) our decisions on utilized and data structures used in crossword describes in 
+the Design above.
+in MyDepthFirstSearch: we have the fields: [endTime, bestBoard, bestQuality,
+ boolean reachedBestSolution]
+the interesting part in the boolean reachedBestSolution. when we find a board
+that is the best solution posible, we change this variable to true, and then all
+the other bords check will break out without perform anything. 
 
+4)
