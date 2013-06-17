@@ -37,7 +37,7 @@ private boolean reachedBestSolution;
     
     private void recSearch(B currentBoard , int depthToEnd){
                                                        //Conditions to stop search     
-        if(System.currentTimeMillis() >= endTime ||  //if time passed
+        if(/*System.currentTimeMillis() >= endTime ||*/  //if time passed
            depthToEnd == -1 ||                       //if depth passed
            currentBoard.getQualityBound() < bestQuality || // if bad branch.
            reachedBestSolution )                      //if another branch reached the best solution
@@ -56,7 +56,7 @@ private boolean reachedBestSolution;
         Iterator<M> movesIterator = currentBoard.getMovesIterator();
         M currentMove;
         //Iterate over the next possible moves, and call them recursivly 
-        while(movesIterator.hasNext()){
+        while(movesIterator.hasNext() && !reachedBestSolution){
             currentMove = movesIterator.next();
             currentBoard.doMove(currentMove);
             recSearch(currentBoard, depthToEnd);

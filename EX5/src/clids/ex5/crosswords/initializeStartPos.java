@@ -36,47 +36,46 @@ public class initializeStartPos {
         LinkedList<StartPosition> stPoList = new LinkedList<>();
         int firstInd = 0;
         int secInd = 0;
-        boolean outOFVoundInIndex = false;
-        //CHECK IT
+        boolean outOFBoundInIndex = false;
         try {
-            //finish when firstInd ot secInd will be bigger than the array dimention 
+            //finish when firstInd or secInd will be bigger than the array dimention 
             while (true) {
                 // while there are frame slots
                 if (isVertical) {
-                    outOFVoundInIndex = FIRSTINDEX;
+                    outOFBoundInIndex = FIRSTINDEX;
                     while (board[firstInd][lineOrCol].getOverRides() == -1) {
                         firstInd++;
                     }
                     secInd = firstInd;
-                    outOFVoundInIndex = SECONDINDEX;
+                    outOFBoundInIndex = SECONDINDEX;
                     while (board[secInd][lineOrCol].getOverRides() != -1) {
                         secInd++;
                     }
-                    stPoList.add(new StartPosition(secInd - firstInd + 1, VERTICAL, firstInd, lineOrCol));
+                    stPoList.add(new StartPosition(secInd - firstInd, VERTICAL, firstInd, lineOrCol)); // CHECK +1
                     firstInd = secInd;
                 } else {
-                    outOFVoundInIndex = FIRSTINDEX;
+                    outOFBoundInIndex = FIRSTINDEX;
                     while (board[lineOrCol][firstInd].getOverRides() == -1) {
                         firstInd++;
                     }
                     secInd = firstInd;
-                    outOFVoundInIndex = SECONDINDEX;
+                    outOFBoundInIndex = SECONDINDEX;
                     while (board[lineOrCol][secInd].getOverRides() != -1) {
                         secInd++;
                     }
-                    stPoList.add(new StartPosition(secInd - firstInd + 1, HORIZONTAL, lineOrCol, firstInd));
+                    stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, lineOrCol, firstInd));// CHECK +1
                     firstInd = secInd;
                 }
             }
         } finally {
-            if (outOFVoundInIndex == SECONDINDEX) {
+            if (outOFBoundInIndex == SECONDINDEX) {
                 if (isVertical) {
                     stPoList.add(new StartPosition(secInd - firstInd, VERTICAL, firstInd, lineOrCol));
                 } else {
                     stPoList.add(new StartPosition(secInd - firstInd, HORIZONTAL, lineOrCol, firstInd));
                 }
-                return stPoList;
             }
+                    return stPoList;
         }
     }
 }

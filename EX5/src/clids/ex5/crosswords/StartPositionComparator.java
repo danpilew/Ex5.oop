@@ -18,6 +18,8 @@ public class StartPositionComparator implements Comparator <StartPosition>{
     @Override
     // return the better startPos as smaller
     public int compare(StartPosition o1, StartPosition o2) {
+        if(o1.equals(o2))
+            return 0;
        //by length
         int compareLengthResult = Integer.compare(o1.getLength(), o2.getLength());
        if(compareLengthResult != 0)

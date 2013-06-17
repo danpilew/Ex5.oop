@@ -10,9 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.text.Position;
+
 
 /**
  *
@@ -29,13 +27,20 @@ public class MyCrossword implements Crossword, Cloneable{
         quality = 0;
         usedWords = new HashMap<String,CrosswordEntry>();
     }
+     public MyCrossword(MyCrossword m) {
+         this.board = m.board.clone();
+         this.quality = m.getQuality();
+         this.unusedWords = (TreeSet<String>) m.unusedWords.clone();
+         this.usedWords = (HashMap<String, CrosswordEntry>) m.usedWords.clone();
+        
+     }
     
 
     @Override
     public void attachDictionary(CrosswordDictionary dictionary) {
         unusedWords = new TreeSet<String>(new wordsComperator());
         unusedWords.addAll(dictionary.getTerms());
-        System.out.println("Dict: " + dictionary.getTerms().toString());
+      //  System.out.println("Dict: " + dictionary.getTerms().toString());
     }
 
     @Override
@@ -43,7 +48,7 @@ public class MyCrossword implements Crossword, Cloneable{
         board = new Square[structure.getHeight()][structure.getWidth()];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
-                board[i][j] = new Square(structure.getSlotType(i, j));
+                board[i][j] = new Square(structure.getSlotType(j, i));
             }
         }
         toStringg();
@@ -79,66 +84,63 @@ public class MyCrossword implements Crossword, Cloneable{
 
     @Override
     public void doMove(CrosswordEntry move) {
-        System.out.println("Doing move");
-        toStringg();
-        System.out.println("move is: " +  move.getTerm() + move.getPosition().getX() + " " + move.getPosition().getY());
+       // System.out.println("Doing move");
+        //toStringg();
+      //  System.out.println("move is: " +  move.getTerm() + move.getPosition().getX() + " " + move.getPosition().getY());
          for (int n = 0; n < move.getTerm().length(); n++) {
              int x  = move.getPosition().getX();
              int y = move.getPosition().getY();
                 if (move.getPosition().isVertical()) {
-                    x = x+n;
+                    y = y+n;
                 } else {
-                    y= y+n;
+                    x = x+n;
                 }
                board[y][x].setLetter(move.getTerm().charAt(n));
                board[y][x].setOverRides( board[y][x].getOverRides() + 1);
-               quality = quality + move.getTerm().length();
-               unusedWords.remove(move.getTerm());
-               usedWords.put(move.getTerm(), move);
+               
             }
-         System.out.println("Finished");
-        toStringg();
+         quality = quality + move.getTerm().length();
+         unusedWords.remove(move.getTerm());
+         usedWords.put(move.getTerm(), move);
+         //System.out.println("Finished");
+        //toStringg();
     }
 
     @Override
     public void undoMove(CrosswordEntry move) {
-        System.out.println("Doing move");
-        toStringg();
+        //System.out.println("unDoing move");
+        //toStringg();
         for (int n = 0; n < move.getTerm().length(); n++) {
              int x  = move.getPosition().getX();
              int y = move.getPosition().getY();
                 if (move.getPosition().isVertical()) {
-                    x++;
+                    y = y +n;
                 } else {
-                    y++;
+                    x = x + n;
                 }
                 //***************************************************************************
                board[y][x].setOverRides( board[y][x].getOverRides() - 1);
-               if(board[x][y].getOverRides() == 0)
+               if(board[y][x].getOverRides() == 0)
                     board[y][x].setLetter('@');
-               quality = quality - move.getTerm().length();
-               unusedWords.add(move.getTerm());
-               usedWords.remove(move.getTerm());
             }
-        System.out.println("Finished");
-        toStringg();
+        quality = quality - move.getTerm().length();
+        unusedWords.add(move.getTerm());
+        usedWords.remove(move.getTerm());
+       // System.out.println("Finished");
+        //toStringg();
     }
 
     @Override
     public SearchBoard<CrosswordEntry> getCopy() {
-        try {
-            return (SearchBoard<CrosswordEntry>) this.clone();
-        } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(MyCrossword.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+     return new MyCrossword(this);
     }
     
     
     public void toStringg(){
         for(int i = 0; i < board.length ; i++){
             for(int j = 0 ; j < board[0].length ; j++){
-                System.out.print(board[i][j].getLetter());
+                char print = (board[i][j].getOverRides() == 0)? '_':'+';
+                System.out.print(print);
             }
             System.out.println("");
         }
@@ -163,7 +165,7 @@ public class MyCrossword implements Crossword, Cloneable{
         public boolean hasNext() {
             if(currentPos == null){
                 if(currentWord == null){
-                    System.out.println(startPoints.size()); 
+                 //   System.out.println(startPoints.size()); 
                     currentPos = startPoints.first();
                     currentWord = unused.first();
                 }else
@@ -200,9 +202,9 @@ public class MyCrossword implements Crossword, Cloneable{
             //Checks if letters fit.
             for (int n = 0; n < word.length(); n++) {
                 if (position.isVertical()) {
-                    currentPosition = board[position.Y][position.X + n];
-                } else {
                     currentPosition = board[position.Y + n][position.X];
+                } else {
+                    currentPosition = board[position.Y][position.X + n];
                 }
                 //whather the box is Frame_Slot or the letters don't fit, return false.
                 if (currentPosition.getOverRides() == -1
